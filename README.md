@@ -1,11 +1,29 @@
 This is a MEAN stack project using Yeoman and the angular-fullstack generator for scaffolding.
 
-Currently has migrated code from master branch on https://bitbucket.org/schan93nxho/go.
+In order to run the program, make sure you have the following programs installed and depending on your computer:
 
-If for any reason you have a server/config/local.env.js you want to use, uncomment out the line **"all: require(./server/config/local.env)" in Gruntfile.js**. The purpose of commenting this out was to keep this specified file in .gitignore as was commonly suggested.
+MongoDB from http://www.mongodb.org/
+Node.js from http://nodejs.org/
+Ruby from https://www.ruby-lang.org/en/
 
-**Useful commands**
+Note: Ruby and a gem depencency SASS must be installed and in your PATH for the project to compile correctly.
 
-For npm install errors: "npm cache clean", "bower cache clean"
+For MAC OSX Users:
 
+Use Homebrew to install these missing packages. Instructions are as follows:
+
+To install Homebrew:
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew doctor
+
+To install ruby:
+brew install ruby
+
+To install SASS:
+Navigate to where you installed ruby (mine was /usr/local/Cellar/ruby/<Your version>) and do:
+gem install sass 
+
+From there, navigate back to the home directory of the project and type in grunt serve. The application should load from there.
+
+Useful Notes:
 For deleting node_modules folder on Windows (*Do this in command prompt): "mkdir junk" and then "robocopy junk node_modules /MIR"
