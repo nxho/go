@@ -23,6 +23,18 @@ To install SASS:
 Navigate to where you installed ruby (mine was /usr/local/Cellar/ruby/<Your version>) and do:
 gem install sass 
 
+Next, type
+
+npm install
+
+Then
+
+bower install
+
+And your dependency issues should be solved. If there are any uninstalled modules, please look them up. Ususally as a rule of thumb you can use
+
+npm install <name of missing dependency> to install these modules
+
 From there, navigate back to the home directory of the project and type in grunt serve. The application should load from there.
 
 Useful Notes:
