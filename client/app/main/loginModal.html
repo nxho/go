@@ -11,31 +11,34 @@
             <div class="col-sm-12">
               <form class="form" name="form" ng-submit="login(form)" novalidate>
 
-                <div class="form-group" ng-class="{ 'has-success': form.username.$valid && submitted,
-                                                    'has-error': (form.username.$required && submitted)
-                                                    || (form.password.$invalid && submitted) }">
+                <div class="form-group" ng-class="{ 'has-success': (form.password.$valid && submitted) || 
+                                                    (form.username.$valid && !notInDatabase && !wrongPassword && submitted),
+                                                    'has-error': (form.password.$required && submitted) ||
+                                                    (form.password.$invalid && submitted) || (form.username.$required && submitted) || (form.password.$invalid && submitted) || (notInDatabase && submitted) || (wrongPassword && submitted) }">
+
                   <label>Username</label>
 
                   <input type="text" name="username" class="form-control" ng-model="user.username" 
                   ng-minlength="3"
                   required>
-                  <p class="help-block"
-                     ng-show="(form.username.$error.minlength || form.username.$error.required) && submitted">
-                    Username must be at least 3 characters.
-                  </p>
-                </div>
 
-                <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted,
-                                                    'has-error': (form.password.$required && submitted) ||
-                                                    (form.password.$invalid && submitted) }">
                   <label>Password</label>
 
                   <input type="password" name="password" class="form-control" ng-model="user.password"
                   ng-minlength="3"
                   required>
-                  <p class="help-block"
+                  <!--<p class="help-block"
                      ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
                     Password must be at least 3 characters.
+                  </p>
+                  <p class="help-block"
+                     ng-show="(form.username.$error.minlength || form.username.$error.required) && submitted">
+                    Username must be at least 3 characters.
+                  </p>-->
+                  <p class="help-block"
+                      ng-show="(form.password.$error.required || notInDatabase
+                      || form.username.$error.required || wrongPassword) && submitted">
+                    User or password is invalid.
                   </p>
                 </div>
 

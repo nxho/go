@@ -6,10 +6,12 @@ angular.module('goApp')
   var signupModal = $modal({title: 'Sign Up', scope: $scope, animation: 'am-fade-and-slide-top', template: 'app/main/signupModal.html', show: false});
 
   $scope.showLogin = function() {
-    $scope.submitted = false;
     $scope.user.username= "";
     $scope.user.password= "";
     $scope.user.email= "";
+    $scope.notInDatabase = false;
+    $scope.wrongPassword = false;
+    $scope.submitted = false;
     loginModal.$promise.then(loginModal.show);
   };
   $scope.hideLogin = function() {
@@ -23,6 +25,8 @@ angular.module('goApp')
     $scope.user.username= "";
     $scope.user.password= "";
     $scope.submitted = false;
+    $scope.notInDatabase = false;
+    $scope.wrongPassword = false;
   };
   $scope.hideSignup = function() {
     signupModal.$promise.then(signupModal.hide);
@@ -31,13 +35,18 @@ angular.module('goApp')
   $scope.user = {};
   $scope.errors = {};
 
-
   $scope.login = function(form) {
-    var httpPromise = $http.get('/api/users/user/username/email/' + $scope.user.username)
-    .success(function(data){
-      return data;
-    });
 
+    var httpPromise = $http.get('/api/users/user/username/email/' + $scope.user.username)
+    .success(function(data, status, headers, config){
+      return data;
+    })
+    .error(function(data, status, headers, config){
+      if(status === 404){
+        $scope.notInDatabase = true;
+      }
+    });
+    $scope.notInDatabase = false;
     $scope.submitted = true;
 
     httpPromise.then(function(data) {
@@ -55,6 +64,7 @@ angular.module('goApp')
           $location.path('/');
         })
         .catch( function(err) {
+          $scope.wrongPassword = true;
           $scope.errors.other = err.message;
           $location.path('/');
         });

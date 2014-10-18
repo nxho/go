@@ -34,7 +34,7 @@ exports.getUserId = function(req, res) {
 exports.getEmail = function(req, res) {
   User.findOne({'username': req.params.username}, function (err, user){
     if(err) return res.send(500, err);
-    console.log("User: ", user);
+    if(!user) return res.send(404);
     res.send(user.email);
   });
 }

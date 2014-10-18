@@ -148,9 +148,10 @@ angular.module('goApp')
       $scope.eventObj.eventLocation = $scope.events[id].eventLocation;
       $scope.eventObj.startDate = $filter('date')($scope.events[id].startDate, 'shortDate');
       $scope.eventObj.endDate = $filter('date')($scope.events[id].endDate, 'shortDate');
-      $scope.eventObj.startTime = $filter('date')($scope.events[id].startTime, 'shortTime');
-      $scope.eventObj.endTime = $filter('date')($scope.events[id].endTime, 'shortTime');
-      console.log("Event Obj: ", $scope.eventObj.startTime);
+      $scope.date = new Date($scope.events[id].startTime);
+      $scope.eventObj.startTime = $scope.date;
+      $scope.date = new Date($scope.events[id].endTime);
+      $scope.eventObj.endTime = $scope.date;
 
       for(var i = 0; i < $scope.events[id].invited.length; i++){
         $scope.eventObj.invited.push($scope.events[id].invited[i]);
