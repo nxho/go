@@ -23,37 +23,47 @@ angular.module('goApp')
       'eventLocationLat': 0,
       'eventLocationLng': 0
     };  
-    $scope.userAlreadyAttending = [];
     
     $scope.currentUser = {};
+    $scope.attend = {
+      'confirmation': false
+    };
 
     $scope.getEvent = function(event){
       $scope.individualEvent = event;
     };
 
     //Set who the current user is
-    $http.get('/api/users/me')
-      .then(function(result){
-        $scope.currentUser = result.data;
+    var currUser = $http.get('/api/users/me')
+      .success(function(data, status, headers, config){
+        return data;
       });
+
+    currUser.then(function(result){
+      $scope.currentUser = result.data;
+      //Get all Events.
+      $http.get('/api/events')
+        .success(function(data){
+          $scope.events = data;
+        })
+        .then(function(){
+          //Find if the current user is attending any of these events
+          for(var i = 0; i < $scope.events.length; i++){
+            for(var j = 0; j < $scope.events[i].attendees.length; j++){
+              if($scope.events[i].attendees[j] === $scope.currentUser.username){
+                $scope.events[i].userAlreadyAttending = true;
+                break;
+              }
+            }
+          }
+        });
+    });
+
 
     $scope.usersAttending = [];
     $scope.temp = [];
  
     $scope.usersAttendingTest = {};
-    //Getting All Events
-
-
-
-  var getCurrentUser = $http.get('/api/users/me')
-  .success(function(result){
-    return result;
-  });
-
-  $http.get('/api/events')
-    .success(function(data){
-      $scope.events = data;
-  });
 
   /*getEvents.then(function(data){
     $scope.events = data.data;
@@ -123,11 +133,10 @@ angular.module('goApp')
         }
     }
 
+
+
     $scope.attending = function(event){
-      $scope.user.userAlreadyAttending = true;
-      if($cookieStore.get('token')){
-        $scope.currentUser = Auth.getCurrentUser();
-      }
+      $scope.attend.confirmation = true;
       $http.put('/api/events/' + event._id, $scope.currentUser)
         .success(function(data) {
           console.log("Success. Event " + event.eventName + " was edited.");
@@ -158,6 +167,7 @@ angular.module('goApp')
       }
       $scope.eventId = id;
     }
+
     $scope.createForm = function(isValid) {
       $scope.submitted = true;
       $scope.temp.startDate = Date.parse($scope.eventObj.startDate);

@@ -6,8 +6,8 @@ angular.module('goApp')
   $scope.currentUsername = $routeParams.username;
   $scope.currentUser = {};
   $scope.individualEvent = {};
-  $scope.user = {
-    'userAlreadyAttending': false
+  $scope.attend = {
+    'confirmation': false
   };
   $scope.showEditEventPage = false;
   $scope.friend = {
@@ -43,8 +43,8 @@ angular.module('goApp')
     return result;
   });
 
-  var showFriendsButton = getCurrentUser.then(function(data){
-    $scope.currentUser = data.data;
+  var showFriendsButton = getCurrentUser.then(function(result){
+    $scope.currentUser = result.data;
     $http.get('/api/users/users/' + $scope.currentUsername)
       .success(function(data, status, headers, config){
         //Get the users profile based on whoever you click
@@ -61,11 +61,11 @@ angular.module('goApp')
       .success(function(data, status, headers, config){
           //Used for displaying the events that an individual is going to (we need to populate them)
           $scope.currentUserViewing = data;
-          console.log($scope.currentUserViewing);
           for(var i = 0; i < $scope.currentUserViewing.eventsAttending.length; i++){
             for(var k = 0; k < $scope.currentUserViewing.eventsAttending[i].attendees.length; k++){
               if($scope.currentUser.username === $scope.currentUserViewing.eventsAttending[i].attendees[k]){
-                $scope.user.userAlreadyAttending = true;
+                $scope.currentUserViewing.eventsAttending[i].userAlreadyAttending = true;
+                break;
               }
             } 
           }
@@ -73,8 +73,38 @@ angular.module('goApp')
     });
   });
 
+    //Set who the current user is
+    /*var currUser = $http.get('/api/users/me')
+      .success(function(data, status, headers, config){
+        return data;
+      });
+
+    currUser.then(function(result){
+      $scope.user = result.data;
+      //Get all the User's events.
+      $http.get('/api/users/events/' + $scope.user._id)
+        .success(function(data){
+          //Get current user to display their data
+          $scope.currentUser = data;
+        })
+        .then(function(){
+          //Find if the current user is attending any of these events
+          for(var i = 0; i < $scope.currentUser.eventsAttending.length; i++){
+            for(var j = 0; j < $scope.currentUser.eventsAttending[i].attendees.length; j++){
+              if($scope.currentUser.eventsAttending[i].attendees[j] === $scope.currentUser.username){
+                $scope.currentUser.eventsAttending[i].userAlreadyAttending = true;
+                break;
+              }
+            }
+          }
+        });
+    });*/
+
+
+
+
     $scope.attending = function(event){
-      $scope.user.userAlreadyAttending = true;
+      $scope.attend.confirmation = true;
       if($cookieStore.get('token')){
         $scope.currentUser = Auth.getCurrentUser();
       }

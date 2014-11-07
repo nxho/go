@@ -247,7 +247,9 @@ exports.getProfile = function(req, res){
 
 //Get Events that a user is attending 
 exports.getEvents = function(req, res) {
+  console.log("Req: ", req.params);
   User.findById(req.params.id).populate('eventsAttending').exec(function(err, events){
+    console.log("Events: ", events);
     if(err) {
       return res.send(500, err);
     }

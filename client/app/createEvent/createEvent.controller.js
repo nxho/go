@@ -34,7 +34,8 @@ angular.module('goApp')
       'invited': [],
       'creator': "",
       'eventLocationLat': 0,
-      'eventLocationLng': 0
+      'eventLocationLng': 0,
+      'userAlreadyAttending': false
     };
 
     $http.get('/api/users/me')
@@ -84,15 +85,23 @@ angular.module('goApp')
         $scope.eventObj.attendees.push($scope.eventObj.creator);
         $http.post('/api/events', $scope.eventObj).
         success(function(data){
-          console.log("Data: ", data);
-          for(var i = 0; i < data.invited.length; i++){
-            $http.put('/api/users/set/invited/events/current/' + data.invited[i].username, data)
+          $scope.eventObj = data;
+        })
+        .then(function(){
+          for(var i = 0; i < $scope.eventObj.invited.length; i++){
+            $http.put('/api/users/set/invited/events/current/' + $scope.eventObj.invited[i].username, $scope.eventObj)
             .success(function(data){
-              console.log("Successfully invited Friends to event");
+              $scope.eventObj = data;
             });
           }
-          $location.path('/');
+        })
+        .then(function(){
+          $http.put('/api/users/' + $scope.currentUser._id, $scope.eventObj)
+            .success(function(data){
+              console.log("Success. User " + $scope.currentUser.name);
+            });
         });
+        $location.path('/');
       }
       else{
         console.log("Not valid.");

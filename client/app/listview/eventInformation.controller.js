@@ -4,27 +4,32 @@ angular.module('goApp')
   .controller('EventInformationCtrl', function ($scope, $location, $http, $routeParams, $rootScope, $cookieStore, User, Auth, listviewService) {
 
     $scope.eventId = $routeParams.id;
-  	$scope.userAttendingEvent = false;
+  	$scope.attend = {
+      'confirmation': false
+    };
     $scope.currentUser = {};
     $scope.test = {};
 
 
-  $http.get('/api/users/me')
-    .then(function(result){
-      $scope.currentUser = result.data;
-  });
 
-    $http.get('/api/events/' + $scope.eventId)
-      .success(function(data, status, headers, config) {
-        $scope.event = data;
-        for(var i = 0; i < $scope.event.attendees.length; i++){
-          if($scope.event.attendees[i] === $scope.currentUser.username){
-            $scope.userAttendingEvent = true;
-          }
-        }
+    //Set who the current user is
+    var currUser = $http.get('/api/users/me')
+      .success(function(data, status, headers, config){
+        return data;
+      });
+
+    currUser.then(function(result){
+      $scope.currentUser = result.data;
+      //Get all the User's events.
+      $http.get('/api/events/' + $scope.eventId)
+        .success(function(data){
+          //Get current user to display their data
+          $scope.event = data;
+        });
     });
 
     $scope.attending = function(event){
+      $scope.attend.confirmation = true;
       $http.put('/api/events/' + event._id, $scope.currentUser)
         .success(function(data) {
           console.log("Success. Event " + event._id + " was edited.");

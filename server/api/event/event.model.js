@@ -14,7 +14,8 @@ var EventSchema = new Schema({
  	invited: [{username: String}],
  	creator: String,
   	eventLocationLat: Number,
-  	eventLocationLng: Number
+  	eventLocationLng: Number,
+  	userAlreadyAttending: Boolean
 });
 
 

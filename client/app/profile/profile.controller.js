@@ -18,26 +18,37 @@ angular.module('goApp')
     'invited': [],
     'creator': ""
   };
-  $scope.userAlreadyAttending = {
-    'alreadyAttending': false
+  $scope.attend = {
+    'confirmation': false
   };
 
-  $http.get('/api/users/me')
-    .then(function(result){
+    //Set who the current user is
+    var currUser = $http.get('/api/users/me')
+      .success(function(data, status, headers, config){
+        return data;
+      });
+
+    currUser.then(function(result){
       $scope.user = result.data;
+      console.log("User: ", $scope.user);
+      //Get all the User's events.
       $http.get('/api/users/events/' + $scope.user._id)
-        .success(function(data, status, headers, config){
-        //Used for displaying data
+        .success(function(data){
+          //Get current user to display their data
           $scope.currentUser = data;
+        })
+        .then(function(){
+          //Find if the current user is attending any of these events
           for(var i = 0; i < $scope.currentUser.eventsAttending.length; i++){
-            for(var k = 0; k < $scope.currentUser.eventsAttending[i].attendees.length; k++){
-              if($scope.currentUser.eventsAttending[i].attendees[k] === $scope.currentUser.username){
-                $scope.userAlreadyAttending.alreadyAttending = true;
+            for(var j = 0; j < $scope.currentUser.eventsAttending[i].attendees.length; j++){
+              if($scope.currentUser.eventsAttending[i].attendees[j] === $scope.currentUser.username){
+                $scope.currentUser.eventsAttending[i].userAlreadyAttending = true;
+                break;
               }
             }
           }
-      });
-  });
+        });
+    });
 
   $scope.showEditEvent = function() {
     $scope.showEditEventPage = true;
@@ -91,10 +102,8 @@ angular.module('goApp')
 };*/
 
     $scope.attending = function(event){
-      $scope.userAlreadyAttending.alreadyAttending = true;
-      if($cookieStore.get('token')){
-        $scope.currentUser = Auth.getCurrentUser();
-      }
+      $scope.attend.confirmation = true;
+
       $http.put('/api/events/' + event._id, $scope.currentUser)
         .success(function(data) {
           console.log("Success. Event " + event.eventName + " was edited.");

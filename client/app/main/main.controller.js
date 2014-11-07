@@ -50,7 +50,6 @@ angular.module('goApp')
     $scope.submitted = true;
 
     httpPromise.then(function(data) {
-      console.log("Data: ", data);
       $scope.user.email = data.data;
       if(form.$valid) {
         Auth.login({
