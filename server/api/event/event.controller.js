@@ -19,6 +19,7 @@ exports.getUsers = function(req, res) {
   });
 };
 
+//Invite friends to event
 exports.inviteFriends = function(req, res) {
   Event.findById(req.params.id, function (err, event) {
     if(err) {return handleError(res, err); }

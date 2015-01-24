@@ -21,15 +21,15 @@
       <tbody data-link ="row" class="rowlink">
         <tr ng-repeat="event in events | filter:searchText">
           <td><a href="/#/listview/{{event._id}}"><!--<div class="date"><p> {{event.startDate | date: 'dd'}} <span> {{event.startDate | date: 'MMM' }}</span></p></div>--></a></td>
-          <td style="padding-top:10px; padding-bottom:30px;">
+          <td style="width:75%;">
             <span class="eventName">{{event.eventName}}</span>
             <div class="eventTime">{{event.startDate | date:'MMMM dd yyyy'}} @ {{event.startTime | date:'hh:mm a'}} &nbsp;&nbsp;–&nbsp;&nbsp;{{event.endDate | date:'MMMM dd yyyy'}} @ {{event.endTime | date:'hh:mm a'}}</div>
             <span class="eventLocation">{{event.eventLocation}}</span>
           </td>
-          <td class="rowlink-skip">
+          <td class="rowlink-skip" style="width:25%;">
             <span ng-show="currentUser.username === event.creator" style="position:relative;"><button type="button" class="btn btn-warning btn-sm" ng-click="editEvent(events.indexOf(event)); showEditEvent()"><span class="glyphicon glyphicon-pencil"></span></button></span>
             <span ng-show="currentUser.username === event.creator"style="position:relative;"><button type="button" class="btn btn-danger btn-sm" ng-click="deleteEvent(event)"><span class="glyphicon glyphicon-trash"></span></button></span> 
-            <span style="position:relative;"><button type="button" class="btn btn-primary btn-sm" ng-click="attending(event)" ng-class="{'btn-default': !event.userAlreadyAttending, 'btn-success': (event.userAlreadyAttending || attend.confirmation), 'disabled': (event.userAlreadyAttending || attend.confirmation)}">Attend?</button></span>
+            <span style="position:relative;"><button type="button" class="btn btn-primary btn-sm" ng-click="attending(event)" ng-class="{'btn-default': !event.userAlreadyAttending, 'btn-success': event.userAlreadyAttending, 'disabled': event.userAlreadyAttending}">Attend?</button></span>
             <div style="position:relative;" bs-modal="modal" content-template="app/listview/viewAttendees.html" ng-click="getEvent(event)"><a href = "">Attendees:</a> {{event.attendees.length}}</div>
           </td>
         </tr>

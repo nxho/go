@@ -18,9 +18,6 @@ angular.module('goApp')
     'invited': [],
     'creator': ""
   };
-  $scope.attend = {
-    'confirmation': false
-  };
 
     //Set who the current user is
     var currUser = $http.get('/api/users/me')
@@ -102,8 +99,8 @@ angular.module('goApp')
 };*/
 
     $scope.attending = function(event){
-      $scope.attend.confirmation = true;
-
+      if(event.userAlreadyAttending == false)
+          event.userAlreadyAttending = true;
       $http.put('/api/events/' + event._id, $scope.currentUser)
         .success(function(data) {
           console.log("Success. Event " + event.eventName + " was edited.");

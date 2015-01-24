@@ -22,6 +22,20 @@ angular.module('goApp')
           $scope.events = data;
         })
     });
+
+    $scope.attending = function(event){
+      if(event.userAlreadyAttending == false)
+          event.userAlreadyAttending = true;
+      $http.put('/api/events/' + event._id, $scope.currentUser)
+        .success(function(data) {
+          console.log("Success. Event " + event.eventName + " was edited.");
+        });
+      $http.put('/api/users/' + $scope.currentUser._id, event)
+        .success(function(data){
+          console.log("Success. User " + $scope.currentUser.name);
+        });
+    };
+
         /*.then(function(){
           //Find if the current user is attending any of these events
           for(var i = 0; i < $scope.events.length; i++){

@@ -25,9 +25,6 @@ angular.module('goApp')
     };  
     
     $scope.currentUser = {};
-    $scope.attend = {
-      'confirmation': false
-    };
 
     $scope.getEvent = function(event){
       $scope.individualEvent = event;
@@ -64,18 +61,6 @@ angular.module('goApp')
     $scope.temp = [];
  
     $scope.usersAttendingTest = {};
-
-  /*getEvents.then(function(data){
-    $scope.events = data.data;
-    console.log("$scope.events:", $scope.events[0]);
-    for(var i = 0; i < $scope.events.length; i++){
-      for(var k = 0; k < $scope.events[i].attendees.length; k++){
-        if($scope.events[i].attendees[k] === $scope.currentUser.username){
-          $scope.user[i].alreadyAttending = true;
-        }
-      }
-    }
-  });*/
 
     $scope.passUser = function(user){
       listviewFactory.setUser(user);
@@ -136,7 +121,8 @@ angular.module('goApp')
 
 
     $scope.attending = function(event){
-      $scope.attend.confirmation = true;
+      if(event.userAlreadyAttending == false)
+          event.userAlreadyAttending = true;
       $http.put('/api/events/' + event._id, $scope.currentUser)
         .success(function(data) {
           console.log("Success. Event " + event.eventName + " was edited.");

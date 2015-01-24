@@ -27,7 +27,7 @@
           <td class="rowlink-skip" style="width:25%;">
             <span ng-show="currentUser.username === event.creator" style="position:relative;"><button type="button" class="btn btn-warning btn-sm" ng-click="editEvent(events.indexOf(event)); showEditEvent()"><span class="glyphicon glyphicon-pencil"></span></button></span>
             <span ng-show="currentUser.username === event.creator"style="position:relative;"><button type="button" class="btn btn-danger btn-sm" ng-click="deleteEvent(event)"><span class="glyphicon glyphicon-trash"></span></button></span> 
-            <span style="position:relative;"><button type="button" class="btn btn-primary btn-sm" ng-click="attending(event)" ng-class="{'btn-default': !event.userAlreadyAttending, 'btn-success': (event.userAlreadyAttending || attend.confirmation), 'disabled': (event.userAlreadyAttending || attend.confirmation)}">Attend?</button></span>
+            <span style="position:relative;"><button type="button" class="btn btn-primary btn-sm" ng-click="attending(event)" ng-class="{'btn-default': !event.userAlreadyAttending, 'btn-success': event.userAlreadyAttending, 'disabled': event.userAlreadyAttending}">Attend?</button></span>
             <div style="position:relative;" bs-modal="modal" content-template="app/listview/viewAttendees.html" ng-click="getEvent(event)"><a href = "">Attendees:</a> {{event.attendees.length}}</div>
           </td>
         </tr>
